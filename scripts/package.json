@@ -1,0 +1,25 @@
+
+{
+  "name": "fhevm-deployment",
+  "version": "1.0.0",
+  "description": "Automated FHEVM contract deployment and management",
+  "scripts": {
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:fhevm": "npx hardhat run scripts/deploy.js --network fhevmSepolia",
+    "verify": "npx hardhat run scripts/verify.js",
+    "verify:sepolia": "NETWORK=sepolia npx hardhat run scripts/verify.js --network sepolia",
+    "verify:fhevm": "NETWORK=fhevmSepolia npx hardhat run scripts/verify.js --network fhevmSepolia",
+    "manage": "npx hardhat run scripts/manage.js --",
+    "list": "npx hardhat run scripts/manage.js -- list",
+    "health": "npx hardhat run scripts/manage.js -- health",
+    "addresses": "npx hardhat run scripts/manage.js -- addresses",
+    "costs": "npx hardhat run scripts/manage.js -- costs"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "hardhat": "^2.17.0",
+    "dotenv": "^16.0.0"
+  }
+}

@@ -1,0 +1,69 @@
+import { AddressBook } from "./deploy";
+import * as fs from "fs";
+import * as path from "path";
+
+const ADDRESSES_FILE = path.join(__dirname, "addresses.json");
+
+interface VerificationParams {
+  address: string;
+  contractName: string;
+  constructorArgs: any[];
+}
+
+async function verifyContract(params: VerificationParams): Promise<void> {
+  console.log(`🔍 Verifying ${params.contractName} at ${params.address}...`);
+  
+  // TODO: Integrate with Hardhat verification plugin
+  // Example:
+  // await hre.run("verify:verify", {
+  //   address: params.address,
+  //   constructorArguments: params.constructorArgs,
+  // });
+  
+  // For now, mock verification
+  console.log("✅ Contract verification simulated (TODO: integrate real verification)");
+  console.log(`📋 Constructor args:`, params.constructorArgs);
+}
+
+async function verifyAll(chainId: string): Promise<void> {
+  try {
+    const addresses = JSON.parse(fs.readFileSync(ADDRESSES_FILE, "utf8"));
+    const chainContracts = addresses[chainId];
+    
+    if (!chainContracts) {
+      console.log(`❌ No contracts found for chain ${chainId}`);
+      return;
+    }
+
+    console.log(`🔍 Starting verification for chain ${chainId}...`);
+    
+    for (const [contractName, contractData] of Object.entries(chainContracts)) {
+      await verifyContract({
+        address: contractData.address,
+        contractName,
+        constructorArgs: contractData.args || [],
+      });
+    }
+
+    console.log("🎉 All contracts verified!");
+    
+  } catch (error) {
+    console.error("❌ Verification failed:", error);
+    process.exit(1);
+  }
+}
+
+async function main() {
+  const chainId = process.argv[2] || "11155111"; // Default to Sepolia
+  await verifyAll(chainId);
+}
+
+// Allow running directly
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
+
+export { verifyContract, verifyAll };
